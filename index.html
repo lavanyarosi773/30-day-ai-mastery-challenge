@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30-Day AI Mastery Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3d;
+    --accent: #6c63ff;
+    --accent2: #ff6b6b;
+    --accent3: #43e97b;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Sora', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    position: relative;
+    padding: 80px 40px 60px;
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(108,99,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .header-glow {
+    position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(108,99,255,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .15em;
+    padding: 6px 14px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 20px;
+    margin-bottom: 24px;
+    animation: fadeDown .6s ease both;
+  }
+  h1 {
+    font-size: clamp(32px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    animation: fadeDown .7s ease both;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 16px;
+    font-size: 16px;
+    color: var(--muted);
+    animation: fadeDown .8s ease both;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-box {
+    background: var(--surface);
+    padding: 24px;
+    text-align: center;
+    transition: background .2s;
+  }
+  .stat-box:hover { background: var(--surface2); }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: .05em; }
+
+  .progress-section {
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; gap: 20px;
+  }
+  .progress-label { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 3px; transition: width .5s ease; }
+  .progress-pct { font-family: var(--mono); font-size: 13px; color: var(--accent); white-space: nowrap; min-width: 36px; text-align: right; }
+
+  nav {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0 40px;
+  }
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .2s, border-color .2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 40px; }
+
+  .week-head {
+    display: flex; align-items: center; gap: 16px;
+    margin: 48px 0 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .week-head::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .week-tag {
+    padding: 4px 10px; border-radius: 4px;
+    font-size: 10px;
+    font-family: var(--mono);
+  }
+  .w1 { background: rgba(108,99,255,0.15); color: #a09af7; }
+  .w2 { background: rgba(67,233,123,0.12); color: #43e97b; }
+  .w3 { background: rgba(247,151,30,0.12); color: #f7971e; }
+  .w4 { background: rgba(255,107,107,0.12); color: #ff6b6b; }
+
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color .2s, transform .15s;
+    cursor: pointer;
+  }
+  .day-card:hover { border-color: #3a3a5a; transform: translateX(4px); }
+  .day-card.open { border-color: var(--accent); transform: translateX(0); }
+  .day-card.done { border-left: 3px solid var(--accent3); }
+
+  .day-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px;
+    user-select: none;
+  }
+  .day-badge {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .db-basic { background: rgba(108,99,255,0.15); color: #a09af7; }
+  .db-inter { background: rgba(67,233,123,0.12); color: #43e97b; }
+  .db-adv   { background: rgba(247,151,30,0.12); color: #f7971e; }
+  .db-proj  { background: rgba(255,107,107,0.12); color: #ff6b6b; }
+
+  .day-title-wrap { flex: 1; }
+  .day-title { font-size: 14px; font-weight: 500; }
+  .day-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .day-pill {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .06em;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+  }
+  .p-concept { background: rgba(108,99,255,0.12); color: #a09af7; }
+  .p-exercise { background: rgba(67,233,123,0.1); color: #43e97b; }
+  .p-project { background: rgba(255,107,107,0.1); color: #ff6b6b; }
+  .p-task { background: rgba(247,151,30,0.1); color: #f7971e; }
+
+  .chevron { color: var(--muted); font-size: 12px; transition: transform .25s; flex-shrink: 0; }
+  .day-card.open .chevron { transform: rotate(180deg); }
+
+  .day-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height .35s ease;
+    border-top: 0px solid var(--border);
+  }
+  .day-card.open .day-body {
+    max-height: 800px;
+    border-top-width: 1px;
+  }
+  .day-body-inner { padding: 20px 20px 20px 70px; }
+
+  .section-lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 8px; margin-top: 16px;
+  }
+  .section-lbl:first-child { margin-top: 0; }
+  .body-text { font-size: 14px; line-height: 1.7; color: #c5c5df; }
+
+  .ex-box { background: var(--surface2); border-radius: 8px; padding: 14px 16px; margin-top: 6px; }
+  .ex-item { font-size: 13px; color: var(--text); padding: 5px 0; display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+  .ex-arrow { color: var(--accent); font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
+
+  .done-btn {
+    margin-top: 16px;
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .done-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  .done-btn.completed { background: rgba(67,233,123,0.1); color: var(--accent3); border-color: var(--accent3); }
+
+  .projects-intro { margin-bottom: 32px; padding: 24px; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); }
+  .projects-intro p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  .proj-filter { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-btn {
+    font-family: var(--mono); font-size: 11px; padding: 6px 14px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: none; color: var(--muted); cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .proj-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color .2s, transform .2s;
+  }
+  .proj-card:hover { border-color: #3a3a5a; transform: translateY(-3px); }
+  .proj-num { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .proj-title { font-size: 15px; font-weight: 600; }
+  .proj-desc { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .proj-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .proj-tag { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; }
+  .diff-easy { background: rgba(67,233,123,0.1); color: #43e97b; }
+  .diff-medium { background: rgba(247,151,30,0.1); color: #f7971e; }
+  .diff-hard { background: rgba(255,107,107,0.1); color: #ff6b6b; }
+
+  .hidden { display: none !important; }
+
+  footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 700px) {
+    header { padding: 50px 20px 40px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    main { padding: 24px 20px; }
+    nav { padding: 0 20px; }
+    .progress-section { padding: 16px 20px; }
+    .day-body-inner { padding: 16px; }
+    .proj-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid"></div>
+  <div class="header-glow"></div>
+  <div class="badge">// COMPLETE BEGINNER → AI HERO</div>
+  <h1>30-Day <span>AI Mastery</span><br>Challenge</h1>
+  <p class="subtitle">Zero to AI Expert — Step by step, day by day</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-box"><div class="stat-num">30</div><div class="stat-label">Days</div></div>
+  <div class="stat-box"><div class="stat-num">20</div><div class="stat-label">Projects</div></div>
+  <div class="stat-box"><div class="stat-num" id="done-count">0</div><div class="stat-label">Completed</div></div>
+  <div class="stat-box"><div class="stat-num" id="pct-display">0%</div><div class="stat-label">Progress</div></div>
+</div>
+
+<div class="progress-section">
+  <span class="progress-label">PROGRESS</span>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  <span class="progress-pct" id="prog-pct">0%</span>
+</div>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('roadmap',this)">ROADMAP</button>
+  <button class="tab-btn" onclick="showTab('projects',this)">20 PROJECTS</button>
+  <button class="tab-btn" onclick="showTab('resources',this)">RESOURCES</button>
+</nav>
+
+<!-- ===== ROADMAP TAB ===== -->
+<div id="tab-roadmap">
+<main>
+
+<div class="week-head"><span class="week-tag w1">WEEK 1</span> AI Basics — Days 1–7</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">01</div>
+    <div class="day-title-wrap">
+      <div class="day-title">What is Artificial Intelligence?</div>
+      <div class="day-sub">The foundation of everything</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">AI (Artificial Intelligence) is the science of making computers think, learn, and make decisions like humans. It has 3 main branches: <strong>Machine Learning</strong> (learns from data), <strong>Deep Learning</strong> (brain-like neural layers), and <strong>Generative AI</strong> (creates content — text, images, code).</div>
+    <div class="section-lbl">Real Life Examples</div>
+    <div class="body-text">Google Translate, Siri, Alexa, Netflix recommendations, Face ID — all powered by AI! Your smartphone alone has 10+ AI features built in.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> List 5 AI features on your phone (camera, voice assistant, suggestions, etc.)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Write down the key differences between AI and traditional software</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Ask ChatGPT or Claude: "Explain AI to a complete beginner in simple terms"</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Watch one "AI for beginners" video on YouTube (30 min)</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">02</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Machine Learning — How Do Machines Learn?</div>
+      <div class="day-sub">Data → Pattern → Prediction</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Machine Learning means a computer learns patterns from data — without you writing explicit rules. There are 3 types: <strong>Supervised Learning</strong> (labeled data), <strong>Unsupervised Learning</strong> (unlabeled data), and <strong>Reinforcement Learning</strong> (reward-based system).</div>
+    <div class="section-lbl">Real Example</div>
+    <div class="body-text">A spam filter learns by studying thousands of spam emails. Netflix learns your taste by watching your watch history. Both are ML in action.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Go to teachablemachine.withgoogle.com and build a free image classifier</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Draw a diagram explaining Supervised vs Unsupervised learning</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Find 3 real-world ML use cases in your daily life</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">03</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Python for AI — Write Your First Code!</div>
+      <div class="day-sub">Google Colab setup + Python basics</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Setup (Free Tool)</div>
+    <div class="body-text">Go to colab.research.google.com → Sign in with your Google account → Click "New Notebook". No installation needed — everything runs in your browser!</div>
+    <div class="section-lbl">Today's Concepts</div>
+    <div class="body-text">Just 4 things to learn today: Variables (store data), Lists (store collections), Loops (repeat actions), Functions (reusable code blocks).</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Run: print("Hello AI World!")</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Store your name, age, and city in variables and print them</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Write a loop from 1 to 10 and print only odd numbers</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Write a function that takes your name and prints "Hello, [name]!"</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">04</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Neural Networks — How AI Mimics the Human Brain</div>
+      <div class="day-sub">Neurons, Layers, Activation Functions</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">The human brain has billions of neurons that pass signals to each other. A neural network mimics this structure: Input Layer → Hidden Layers → Output Layer. Deep Learning simply means using many hidden layers. More layers = ability to learn more complex patterns.</div>
+    <div class="section-lbl">Visualize It</div>
+    <div class="body-text">Visit playground.tensorflow.org — an interactive tool where you can visually build and train a neural network right in your browser. Try adding and removing neurons to see how accuracy changes.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Spend 10 minutes exploring playground.tensorflow.org</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Test: does adding more hidden layers improve accuracy?</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Draw a neural network diagram in your notebook (Input → Hidden → Output)</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">05</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Data — The Fuel of AI</div>
+      <div class="day-sub">Datasets, Kaggle, and Data Types</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Without data, there is no AI — "Garbage in, Garbage out." Data comes in two types: <strong>Structured</strong> (tables, CSV files, spreadsheets) and <strong>Unstructured</strong> (images, audio, raw text). In real projects, data cleaning and preparation takes up to 70% of total work time.</div>
+    <div class="section-lbl">Free Dataset Source</div>
+    <div class="body-text">Kaggle.com is the world's largest data science community. It offers free datasets, code notebooks, and competitions for all skill levels.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a free account on kaggle.com</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Download the famous "Titanic" dataset and open it in Excel or Google Sheets</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Analyze which columns might affect passenger survival</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Identify where missing values exist in the dataset</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-basic">06</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Prompt Engineering — The #1 Skill of the AI Era</div>
+      <div class="day-sub">How to talk to AI and get great results</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">A prompt is the instruction you give to an AI. The quality of your prompt directly determines the quality of the output. Use this formula for great prompts: <strong>Role + Context + Task + Format + Constraints.</strong></div>
+    <div class="section-lbl">Example</div>
+    <div class="body-text">Weak: "Write a poem." | Strong: "You are a professional poet. Write a 4-line rhyming poem about the monsoon season, suitable for a 10-year-old child, using simple and vivid language."</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Take the same topic, write a weak prompt and a strong prompt, then compare the results</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Write a perfect "AI tutor" prompt for your favorite subject</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Try 5 different prompt styles on Claude or ChatGPT and note the differences</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a custom persona prompt and have a conversation with it</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">07</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Week 1 Mini Project — Build an AI Prompt Toolkit</div>
+      <div class="day-sub">Your first portfolio piece!</div>
+    </div>
+    <span class="day-pill p-project">PROJECT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Project Goal</div>
+    <div class="body-text">Apply everything from Week 1 to create a curated "AI Prompt Collection" document. This will become your first AI portfolio item!</div>
+    <div class="section-lbl">Tasks</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Write 10 highly useful prompts across categories: study, career, creative, coding</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Show a before/after example for each prompt (weak vs. strong)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Format and save it in Google Docs</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Share it with a friend or post on social media — "Week 1 Complete!"</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="week-head"><span class="week-tag w2">WEEK 2</span> Tools & Your First ML Model — Days 8–14</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">08</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Hugging Face — The App Store for AI Models</div>
+      <div class="day-sub">500,000+ free AI models to explore</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Hugging Face is the world's largest AI model repository — think of it as the "GitHub for AI." Over 500,000 free models covering text, image, audio, and video tasks. "Spaces" are live interactive demo apps you can try instantly.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a free account at huggingface.co</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Try a sentiment analysis model — test positive and negative sentences</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Generate an image using a text-to-image Space</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Use a translation model to translate a sentence across 3 languages</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">09</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Image AI — Stable Diffusion & DALL-E</div>
+      <div class="day-sub">Turn words into stunning images</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Image generation AI creates realistic or artistic visuals from a text description. Use cases: digital art, marketing, UI mockups, book illustration. Free tools include: Adobe Firefly, Bing Image Creator, and Canva AI.</div>
+    <div class="section-lbl">Power Prompt Tips</div>
+    <div class="body-text">Specify style: "oil painting / watercolor / digital art / photorealistic" | Set mood: "golden hour / dramatic lighting / cinematic" | Add quality: "4K, highly detailed, masterpiece"</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Open Adobe Firefly (free) and generate: "A coastal village at sunset, oil painting, golden hour lighting"</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Generate the same scene in 3 different art styles and compare them</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create an AI-generated image of your hometown or a dream destination</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">10</div>
+    <div class="day-title-wrap">
+      <div class="day-title">NumPy & Pandas — The Power Tools of AI</div>
+      <div class="day-sub">Data manipulation in Python</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text"><strong>NumPy</strong> handles fast mathematical operations on arrays and matrices. <strong>Pandas</strong> handles table-style and CSV data using DataFrames. These two libraries are the backbone of nearly every AI and data science project.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> In Colab, run: import numpy as np and import pandas as pd</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Load the Titanic CSV using pd.read_csv() and view the first 5 rows with df.head()</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Calculate the average age, maximum fare, and survival rate</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Run df.info() and df.describe() to understand the dataset structure</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">11</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Scikit-learn — Train Your First ML Model!</div>
+      <div class="day-sub">⚡ Difficult Task — Push yourself!</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Scikit-learn is a Python library with ready-to-use ML algorithms. Decision Trees, Random Forests, SVM — all available in just a few lines of code. Today you'll learn the core workflow: load data → split → train → evaluate.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Run: from sklearn.datasets import load_iris and load the dataset</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Use train_test_split() to create an 80/20 train-test split</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Train a DecisionTreeClassifier on the training data</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Calculate and print the accuracy_score — aim for 90% or higher!</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">12</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Data Visualization — Charts & Graphs</div>
+      <div class="day-sub">Matplotlib + Seaborn</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Visualizing your data reveals patterns that raw numbers hide. Matplotlib handles basic plots; Seaborn creates beautiful statistical charts. Exploratory Data Analysis (EDA) with visualizations is a required step in every real ML project.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Plot an age distribution histogram from the Titanic dataset</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a color-coded bar chart comparing survivors vs. non-survivors</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Generate a Seaborn correlation heatmap to spot feature relationships</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Save your 5 best charts and upload them to Google Drive</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-inter">13</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Large Language Models — How Does ChatGPT Work?</div>
+      <div class="day-sub">Transformers, Parameters, Training</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">LLMs (Large Language Models) are trained on trillions of words and hundreds of billions of parameters. They use the Transformer architecture (introduced in 2017). GPT-4, Claude, Gemini, and Llama are all LLMs competing at the frontier.</div>
+    <div class="section-lbl">Key Terms to Know</div>
+    <div class="body-text"><strong>Token</strong> = a chunk of text (word or sub-word). <strong>Context Window</strong> = how much the model can "remember" at once. <strong>Temperature</strong> = controls creativity (0 = precise, 1 = creative).</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Ask the same question to ChatGPT, Claude, and Gemini — compare their answers</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Test hallucination: ask about a very recent event and fact-check the response</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> List 5 key limitations of LLMs (bias, knowledge cutoff, hallucination, etc.)</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">14</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Week 2 Project — Build a Spam SMS Classifier</div>
+      <div class="day-sub">A real ML model, end to end!</div>
+    </div>
+    <span class="day-pill p-project">PROJECT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Goal</div>
+    <div class="body-text">Build an ML model that detects whether an SMS message is spam or not. The "SMS Spam Collection" dataset is freely available on Kaggle. After training, you can type any message and get an instant spam verdict!</div>
+    <div class="section-lbl">Steps</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Download the dataset from Kaggle and load it into Colab with Pandas</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Clean the text: convert to lowercase, remove punctuation</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Use CountVectorizer to convert text into numerical features</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Train a Naive Bayes classifier and evaluate it</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Test it: type "Congratulations! You've won a free prize. Click now!" → should be SPAM!</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="week-head"><span class="week-tag w3">WEEK 3</span> Deep Learning & Generative AI — Days 15–21</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">15</div>
+    <div class="day-title-wrap">
+      <div class="day-title">TensorFlow & PyTorch — Deep Learning Frameworks</div>
+      <div class="day-sub">The industry-standard tools</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text"><strong>TensorFlow</strong> (by Google) — production-ready, uses the beginner-friendly Keras API. <strong>PyTorch</strong> (by Meta) — popular in research, more Pythonic and flexible. Both are widely used in industry. Beginners are recommended to start with TensorFlow + Keras.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> In Colab: import tensorflow as tf → print(tf.__version__)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a Sequential model and add 3 Dense layers</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Run model.summary() and understand the parameter count</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">16</div>
+    <div class="day-title-wrap">
+      <div class="day-title">CNNs — How Does AI "See" Images?</div>
+      <div class="day-sub">Convolutional Neural Networks</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">CNNs (Convolutional Neural Networks) are specialized for processing images. The pipeline: Convolution layer (detects features like edges) → Pooling layer (reduces size) → Flatten → Dense (classifies). Used in face recognition, medical imaging, and self-driving cars.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Load the MNIST dataset: from tensorflow.keras.datasets import mnist</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Build a model with Conv2D + MaxPooling + Flatten + Dense layers</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Train for 5 epochs and aim for 95%+ accuracy</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Test the model on a photo of your own handwritten digit</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">17</div>
+    <div class="day-title-wrap">
+      <div class="day-title">NLP — How Does AI Read and Understand Text?</div>
+      <div class="day-sub">Natural Language Processing basics</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">NLP (Natural Language Processing) enables AI to read, understand, and generate human language. The standard pipeline: Text → Tokenize → Clean → Vectorize → Model. Core tasks include: Sentiment Analysis, Translation, Summarization, Q&A, and Named Entity Recognition.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install NLTK and tokenize a movie review or news article</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Remove stop words and count word frequencies</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Generate a WordCloud to visualize the most common words</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">18</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Transformers & Attention — The Secret Behind GPT</div>
+      <div class="day-sub">The architecture that changed everything</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">"Attention Is All You Need" — the 2017 Google paper that revolutionized AI. Self-attention allows the model to understand relationships between words in a sentence. Example: In "The cat sat on the mat because it was tired," attention helps the model understand that "it" refers to "the cat." GPT, BERT, and all modern LLMs are Transformer-based.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install the library: pip install transformers</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a sentiment-analysis pipeline and test several sentences</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Try a text-generation pipeline — give it a story opening and let it continue</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">19</div>
+    <div class="day-title-wrap">
+      <div class="day-title">RAG — Make AI Read Your Own Documents!</div>
+      <div class="day-sub">⚡ Difficult — High value concept!</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">RAG (Retrieval-Augmented Generation) lets you feed your own documents (PDFs, notes, docs) to an LLM so it can answer questions about them. Pipeline: Documents → Chunks → Embeddings → Vector Database → LLM. Businesses use this to build AI on top of their private knowledge bases.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Go to ChatPDF.com, upload any PDF, and ask it questions</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Follow the LlamaIndex quickstart tutorial at docs.llamaindex.ai</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Try uploading a textbook chapter and ask it to generate exam questions</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-adv">20</div>
+    <div class="day-title-wrap">
+      <div class="day-title">AI Ethics & Responsible AI</div>
+      <div class="day-sub">Bias, Hallucination, Privacy & Safety</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text"><strong>Hallucination:</strong> AI sometimes confidently states incorrect information. <strong>Bias:</strong> If training data is biased, the model will be too. <strong>Privacy:</strong> Never share sensitive personal data with AI systems. Responsible AI means understanding these risks and using AI thoughtfully and ethically.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Try to get ChatGPT to hallucinate — ask about a very obscure or fictional fact</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Research one real-world AI bias case study (e.g., hiring algorithms, facial recognition)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Write your own 5 rules for using AI responsibly</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">21</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Week 3 Project — Build an AI Chatbot with Memory</div>
+      <div class="day-sub">Using the OpenAI API!</div>
+    </div>
+    <span class="day-pill p-project">PROJECT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Goal</div>
+    <div class="body-text">Build a chatbot that remembers your conversation history. Use a custom system prompt like: "You are a helpful AI tutor. Explain all concepts clearly and in simple language."</div>
+    <div class="section-lbl">Steps</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Create an account at platform.openai.com and generate an API key (free credits included)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Install the library: pip install openai</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Maintain a messages = [] list to store the full conversation history</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Use a while loop: get user input → send to API → print the response</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Add logic so typing "exit" ends the conversation</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="week-head"><span class="week-tag w4">WEEK 4</span> Build & Deploy — Days 22–30</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">22</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Streamlit — Turn Your AI Model into a Website!</div>
+      <div class="day-sub">⚡ No HTML needed — pure Python!</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Streamlit converts Python scripts into fully interactive web apps. You can build a shareable AI-powered website in just 10–20 lines of code. Key components: st.title(), st.text_input(), st.button(), st.write().</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install: pip install streamlit → import streamlit as st</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create app.py with st.title("My AI App") and st.write("Hello World!") → run with streamlit run app.py</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Add a text input field, a submit button, and display an AI-generated response</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Deploy for free on Streamlit Cloud (streamlit.io/cloud) and share the link!</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">23</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Fine-Tuning — Train AI on Your Own Data</div>
+      <div class="day-sub">Custom AI for your specific use case</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">Fine-tuning takes a pre-trained model (one that already knows a lot) and continues training it on your specific data to make it an expert in your domain. Used for medical, legal, customer service, and specialized language tasks.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Follow the DistilBERT fine-tuning tutorial on Hugging Face</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Collect 50 labeled positive and negative sentences to create a custom dataset</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Fine-tune the model and compare accuracy before and after</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">24</div>
+    <div class="day-title-wrap">
+      <div class="day-title">AI Agents — Autonomous AI That Works for You</div>
+      <div class="day-sub">The future of AI automation</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">An AI Agent receives a goal and autonomously plans and executes the steps to achieve it — using tools like web search, code execution, and file writing. Multi-agent systems use several specialized agents working together. Popular frameworks: CrewAI, AutoGen, LangGraph.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Follow the CrewAI quickstart tutorial at crewai.com</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create two agents: a "Researcher" and a "Writer"</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Assign the task "Write a detailed blog about local tourism" and watch the agents collaborate</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">25</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Vector Databases — Giving AI a Long-Term Memory</div>
+      <div class="day-sub">ChromaDB & semantic search</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">A vector database converts text into numerical vectors (embeddings) and stores them for fast similarity search. Semantic search finds results by meaning, not just keyword matching — search for "courage" and get "bravery" as a result. Vector DBs are essential for RAG systems.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install ChromaDB: pip install chromadb (free, runs locally)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Add 20 quotes or proverbs to your vector database</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Run a semantic search query and observe how meaning-based results differ from keyword results</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">26</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Computer Vision — Real-Time Object Detection</div>
+      <div class="day-sub">YOLO v8 + OpenCV</div>
+    </div>
+    <span class="day-pill p-task">DIFFICULT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text">YOLO ("You Only Look Once") is a real-time object detection model that can identify multiple objects in milliseconds. Used in security cameras, self-driving vehicles, retail analytics, and industrial inspection systems.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install: pip install ultralytics opencv-python</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Load the model: from ultralytics import YOLO → model = YOLO('yolov8n.pt')</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Run detection on a photo and view the bounding boxes around detected objects</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Try it on a webcam stream for real-time detection (if available)</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">27</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Voice AI — Speech-to-Text & Text-to-Speech</div>
+      <div class="day-sub">Whisper + gTTS</div>
+    </div>
+    <span class="day-pill p-exercise">EXERCISE</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Concept</div>
+    <div class="body-text"><strong>Whisper</strong> (by OpenAI) — transcribes audio to text with support for 99 languages and excellent accuracy. <strong>gTTS</strong> (Google Text-to-Speech) — converts text to natural-sounding voice. Combining both enables a full voice assistant pipeline.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Install: pip install openai-whisper gTTS</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Record a short audio clip and transcribe it using Whisper</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Convert a paragraph of text into an MP3 audio file using gTTS</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Build a mini voice assistant: speak → transcribe → get AI response → speak back</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">28</div>
+    <div class="day-title-wrap">
+      <div class="day-title">AI Career Roadmap — What Are Your Next Steps?</div>
+      <div class="day-sub">Jobs, salaries, and portfolio building</div>
+    </div>
+    <span class="day-pill p-concept">CONCEPT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Career Paths in AI</div>
+    <div class="body-text"><strong>ML Engineer</strong> — builds and deploys models. <strong>Data Scientist</strong> — finds insights in data. <strong>AI Researcher</strong> — creates new algorithms and techniques. <strong>Prompt Engineer</strong> — designs AI workflows and prompts. <strong>AI Product Manager</strong> — leads AI product development. All of these roles are in high demand globally.</div>
+    <div class="section-lbl">Exercises</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Search "AI Engineer" on LinkedIn and save the top 5 job descriptions</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Create a GitHub account and start uploading your projects (your public portfolio)</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Choose your next learning path: Coursera, fast.ai, or deeplearning.ai</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">29</div>
+    <div class="day-title-wrap">
+      <div class="day-title">Final Project Prep — Plan Your Best AI App</div>
+      <div class="day-sub">Your magnum opus!</div>
+    </div>
+    <span class="day-pill p-project">PROJECT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Choose Your Final Project</div>
+    <div class="body-text">Combine everything you've learned over 30 days into one complete, polished AI application. Pick the idea that excites you most!</div>
+    <div class="section-lbl">Project Options</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> News Summarizer — NLP + LLM + Streamlit web app</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Plant Disease Detector — CNN + Camera + Web deployment</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Resume Analyzer Chatbot — RAG + PDF parsing + Chatbot UI</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Fake News Detector — ML + Web scraping + User interface</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Voice Translator App — Whisper + LLM + gTTS + Streamlit</div>
+    </div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+<div class="day-card" onclick="toggleCard(this)">
+  <div class="day-head">
+    <div class="day-badge db-proj">30</div>
+    <div class="day-title-wrap">
+      <div class="day-title">🎓 Demo Day — Share Your AI App with the World!</div>
+      <div class="day-sub">30 days complete. You made it!</div>
+    </div>
+    <span class="day-pill p-project">PROJECT</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body"><div class="day-body-inner">
+    <div class="section-lbl">Final Day Checklist</div>
+    <div class="ex-box">
+      <div class="ex-item"><span class="ex-arrow">→</span> Upload your project to GitHub with a clear README file</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Deploy it for free on Streamlit Cloud or Hugging Face Spaces</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Record a short screen recording demo of your app in action</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Post on LinkedIn: "I completed the 30-Day AI Challenge! 🎉" + project link</div>
+      <div class="ex-item"><span class="ex-arrow">→</span> Share with friends and family — celebrate this milestone!</div>
+    </div>
+    <div class="body-text" style="margin-top:16px; color: #6c63ff; font-weight:500;">This is not the end — this is the beginning of your AI journey! 🚀</div>
+    <button class="done-btn" onclick="markDone(this,event)">✓ Mark as Done</button>
+  </div></div>
+</div>
+
+</main>
+</div>
+
+<!-- ===== PROJECTS TAB ===== -->
+<div id="tab-projects" class="hidden">
+<main>
+  <div class="projects-intro">
+    <p>6 Beginner + 9 Intermediate + 5 Advanced = 20 real projects. Every project is portfolio-ready and can be uploaded to GitHub. Start from Beginner and work your way up to Advanced!</p>
+  </div>
+  <div class="proj-filter">
+    <button class="filter-btn active" onclick="filterProj('all',this)">All 20</button>
+    <button class="filter-btn" onclick="filterProj('easy',this)">Beginner</button>
+    <button class="filter-btn" onclick="filterProj('medium',this)">Intermediate</button>
+    <button class="filter-btn" onclick="filterProj('hard',this)">Advanced</button>
+  </div>
+  <div class="proj-grid" id="proj-grid">
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 01</div>
+      <div class="proj-title">AI Prompt Library</div>
+      <div class="proj-desc">A curated collection of the best AI prompts organized by category — easy to copy and use instantly.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">HTML/CSS</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 02</div>
+      <div class="proj-title">Spam SMS Detector</div>
+      <div class="proj-desc">Type any SMS message and instantly find out if it's spam or legitimate. Built with Naive Bayes + Streamlit UI.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">Python + ML</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 03</div>
+      <div class="proj-title">Movie Recommender</div>
+      <div class="proj-desc">Enter your favorite movie and get similar recommendations using cosine similarity on movie metadata.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">Python + NLP</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 04</div>
+      <div class="proj-title">Handwritten Digit Reader</div>
+      <div class="proj-desc">Draw any digit on a canvas and the AI reads it instantly. Built with an MNIST-trained CNN model achieving 99% accuracy.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">CNN + TensorFlow</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 05</div>
+      <div class="proj-title">Sentiment Analyzer</div>
+      <div class="proj-desc">Paste any text and get a positive, negative, or neutral classification with a confidence score.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">NLP + HuggingFace</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="easy">
+      <div class="proj-num">PROJECT 06</div>
+      <div class="proj-title">AI Quote Generator</div>
+      <div class="proj-desc">Enter a topic (love, success, nature) and get a motivational quote generated by AI on demand.</div>
+      <div class="proj-tags"><span class="proj-tag diff-easy">Beginner</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">LLM + Streamlit</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 07</div>
+      <div class="proj-title">AI Story Writer</div>
+      <div class="proj-desc">Enter a character, setting, and genre — the AI generates a complete short story and can continue it chapter by chapter.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">LLM + Memory</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 08</div>
+      <div class="proj-title">Resume Analyzer</div>
+      <div class="proj-desc">Upload a resume PDF and receive a detailed AI analysis: strengths, weaknesses, ATS score, and specific improvement suggestions.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">RAG + PDF</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 09</div>
+      <div class="proj-title">Plant Disease Detector</div>
+      <div class="proj-desc">Upload a photo of a plant leaf and the AI identifies the disease, severity level, and recommended remedy.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">CNN + Vision</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 10</div>
+      <div class="proj-title">News Summarizer</div>
+      <div class="proj-desc">Paste a long news article URL and get a concise 3-line summary, key takeaways, and sentiment analysis.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">NLP + Scraping</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 11</div>
+      <div class="proj-title">AI Subject Tutor</div>
+      <div class="proj-desc">An AI-powered tutor that answers questions on any subject, adjusts explanation depth based on the student's level.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">LLM + Chat</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 12</div>
+      <div class="proj-title">Fake News Detector</div>
+      <div class="proj-desc">Paste a news headline or article and get a real vs. fake probability score with reasoning and source suggestions.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">ML + NLP</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 13</div>
+      <div class="proj-title">Voice Translator</div>
+      <div class="proj-desc">Speak in any language, get it translated in real-time, and have the translation read back to you as audio.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">Whisper + gTTS</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 14</div>
+      <div class="proj-title">AI Interview Coach</div>
+      <div class="proj-desc">Enter your target job role and experience level — receive mock interview questions, model answers, and personalized feedback.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">LLM + Voice</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="medium">
+      <div class="proj-num">PROJECT 15</div>
+      <div class="proj-title">House Price Predictor</div>
+      <div class="proj-desc">Enter location, size, number of rooms, and amenities to get an estimated property price using a Regression model.</div>
+      <div class="proj-tags"><span class="proj-tag diff-medium">Intermediate</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">ML + Streamlit</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="hard">
+      <div class="proj-num">PROJECT 16</div>
+      <div class="proj-title">AI Coding Assistant</div>
+      <div class="proj-desc">Describe a programming problem in plain English and receive working Python or JavaScript code, an explanation, and test cases.</div>
+      <div class="proj-tags"><span class="proj-tag diff-hard">Advanced</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">LLM + API</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="hard">
+      <div class="proj-num">PROJECT 17</div>
+      <div class="proj-title">Document Q&A Bot</div>
+      <div class="proj-desc">Upload multiple PDFs and ask precise questions. The system retrieves exact answers with source citations using a RAG pipeline.</div>
+      <div class="proj-tags"><span class="proj-tag diff-hard">Advanced</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">RAG + Vector DB</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="hard">
+      <div class="proj-num">PROJECT 18</div>
+      <div class="proj-title">Real-Time Object Detector</div>
+      <div class="proj-desc">Uses a webcam feed to detect and label objects, people, and vehicles in real time with bounding boxes and counts.</div>
+      <div class="proj-tags"><span class="proj-tag diff-hard">Advanced</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">YOLO v8 + OpenCV</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="hard">
+      <div class="proj-num">PROJECT 19</div>
+      <div class="proj-title">Multi-Agent Research Bot</div>
+      <div class="proj-desc">Give a topic — a Researcher agent gathers information and a Writer agent produces a publish-ready blog post. Built with CrewAI.</div>
+      <div class="proj-tags"><span class="proj-tag diff-hard">Advanced</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">CrewAI + LLM</span></div>
+    </div>
+
+    <div class="proj-card" data-diff="hard">
+      <div class="proj-num">PROJECT 20</div>
+      <div class="proj-title">Full AI SaaS Application</div>
+      <div class="proj-desc">A complete web app with user authentication, AI-powered features, database integration, and cloud deployment. The ultimate portfolio showpiece.</div>
+      <div class="proj-tags"><span class="proj-tag diff-hard">Advanced</span><span class="proj-tag" style="background:rgba(108,99,255,0.1);color:#a09af7">Full Stack + AI</span></div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- ===== RESOURCES TAB ===== -->
+<div id="tab-resources" class="hidden">
+<main>
+  <div class="week-head"><span class="week-tag w1">FREE</span> Tools & Platforms</div>
+  <div class="proj-grid">
+    <div class="proj-card"><div class="proj-num">CODING</div><div class="proj-title">Google Colab</div><div class="proj-desc">Free cloud GPU, Python pre-installed, runs entirely in your browser. colab.research.google.com</div></div>
+    <div class="proj-card"><div class="proj-num">MODELS</div><div class="proj-title">Hugging Face</div><div class="proj-desc">500K+ free AI models, interactive Spaces demos, and a thriving community. huggingface.co</div></div>
+    <div class="proj-card"><div class="proj-num">DATASETS</div><div class="proj-title">Kaggle</div><div class="proj-desc">The world's largest data science platform. Free datasets, notebooks, and competitions. kaggle.com</div></div>
+    <div class="proj-card"><div class="proj-num">DEPLOY</div><div class="proj-title">Streamlit Cloud</div><div class="proj-desc">Free hosting for Python-based web apps. Share your AI apps with a public URL. streamlit.io/cloud</div></div>
+    <div class="proj-card"><div class="proj-num">IMAGES</div><div class="proj-title">Adobe Firefly</div><div class="proj-desc">Free AI image generation with a generous free tier. Commercial-safe outputs. firefly.adobe.com</div></div>
+    <div class="proj-card"><div class="proj-num">AI CHAT</div><div class="proj-title">Claude + ChatGPT</div><div class="proj-desc">Both offer free tiers. Use them as your AI tutors throughout this challenge.</div></div>
+  </div>
+
+  <div class="week-head"><span class="week-tag w2">COURSES</span> Next-Level Learning</div>
+  <div class="proj-grid">
+    <div class="proj-card"><div class="proj-num">FREE</div><div class="proj-title">fast.ai</div><div class="proj-desc">Hands-on, practical deep learning for coders. Widely considered the world's best free AI course. fast.ai</div></div>
+    <div class="proj-card"><div class="proj-num">FREE AUDIT</div><div class="proj-title">deeplearning.ai</div><div class="proj-desc">Andrew Ng's famous courses. The Machine Learning Specialization can be audited for free.</div></div>
+    <div class="proj-card"><div class="proj-num">FREE</div><div class="proj-title">CS50 AI (Harvard)</div><div class="proj-desc">Harvard's free Introduction to Artificial Intelligence with Python course. cs50.harvard.edu/ai</div></div>
+    <div class="proj-card"><div class="proj-num">YOUTUBE</div><div class="proj-title">Sentdex + 3Blue1Brown</div><div class="proj-desc">Sentdex for Python & ML tutorials; 3Blue1Brown for beautiful visual explanations of neural networks.</div></div>
+  </div>
+
+  <div class="week-head"><span class="week-tag w3">COMMUNITY</span> Learn Together</div>
+  <div class="proj-grid">
+    <div class="proj-card"><div class="proj-num">DISCORD</div><div class="proj-title">Hugging Face Discord</div><div class="proj-desc">An active global AI community. Ask questions, share projects, and collaborate with other learners.</div></div>
+    <div class="proj-card"><div class="proj-num">REDDIT</div><div class="proj-title">r/MachineLearning</div><div class="proj-desc">Stay current with the latest AI news, research papers, and community discussions.</div></div>
+    <div class="proj-card"><div class="proj-num">TWITTER / X</div><div class="proj-title">AI Twitter</div><div class="proj-desc">Follow @AndrewYNg, @karpathy, and @ylecun for daily AI insights and cutting-edge research updates.</div></div>
+    <div class="proj-card"><div class="proj-num">NEWSLETTER</div><div class="proj-title">The Rundown AI</div><div class="proj-desc">A concise 5-minute daily newsletter covering the biggest AI news. Free to subscribe. therundown.ai</div></div>
+  </div>
+</main>
+</div>
+
+<footer>
+  <p>30-Day AI Mastery Challenge &nbsp;·&nbsp; Complete Beginner Edition &nbsp;·&nbsp; From Zero to AI Hero 🚀</p>
+  <p style="margin-top:8px">Start on Day 1 and don't stop — your AI journey begins now!</p>
+</footer>
+
+<script>
+  let completed = new Set();
+
+  function toggleCard(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.day-card.open').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  function markDone(btn, e) {
+    e.stopPropagation();
+    const card = btn.closest('.day-card');
+    const num = card.querySelector('.day-badge').textContent.trim();
+    if (completed.has(num)) {
+      completed.delete(num);
+      btn.textContent = '✓ Mark as Done';
+      btn.classList.remove('completed');
+      card.classList.remove('done');
+    } else {
+      completed.add(num);
+      btn.textContent = '✓ Completed!';
+      btn.classList.add('completed');
+      card.classList.add('done');
+    }
+    const pct = Math.round(completed.size / 30 * 100);
+    document.getElementById('done-count').textContent = completed.size;
+    document.getElementById('pct-display').textContent = pct + '%';
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-pct').textContent = pct + '%';
+  }
+
+  function showTab(tab, btn) {
+    ['roadmap','projects','resources'].forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+
+  function filterProj(diff, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.proj-card').forEach(card => {
+      card.style.display = (diff === 'all' || card.dataset.diff === diff) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
